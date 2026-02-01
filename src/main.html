@@ -1,0 +1,124 @@
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+
+	<script type="text/javascript" src="./dependencies/codef/codef_core.js"></script> 
+
+	<script type="text/javascript" src="./dependencies/codef/codef_stats.js"></script> 
+	
+	<script type="text/javascript" src="./data/music0.s3m.js"></script>
+	<script type="text/javascript" src="./data/music1.s3m.js"></script>
+	 
+
+	<script type="text/javascript" src="./data/part01_ALKU_data.js"></script>
+	<script type="text/javascript" src="./data/part02_U2A_data.js"></script>
+	<script type="text/javascript" src="./data/part03_PAM_data.js"></script>
+	<script type="text/javascript" src="./data/part04_BEGLOGO_data.js"></script>
+	<script type="text/javascript" src="./data/part05_GLENZ_data.js"></script>
+	<script type="text/javascript" src="./data/part06_GLENZ3D_data.js"></script>
+	<script type="text/javascript" src="./data/part08_TECHNO_data_circle.js"></script> 
+  	<script type="text/javascript" src="./data/part11_TECHNO_data_troll.js"></script> 
+  	<script type="text/javascript" src="./data/part12_FOREST_data.js"></script> 
+  	<script type="text/javascript" src="./data/part13_LENS_data.js"></script> 
+  	<script type="text/javascript" src="./data/part19_WATER_data.js"></script> 
+  	<script type="text/javascript" src="./data/part20_COMAN_data.js"></script> 
+  	<script type="text/javascript" src="./data/part21_JPLOGO_data.js"></script> 
+	<script type="text/javascript" src="./data/part22_U2E_data.js"></script>
+  	<script type="text/javascript" src="./data/part23_ENDLOGO_data.js"></script>
+  	<script type="text/javascript" src="./data/part24_CREDITS_data.js"></script>
+  	<script type="text/javascript" src="./data/part25_ENDSCRL_data.js"></script>
+
+	<script type="text/javascript" src="./dependencies/webaudio-mod-player/utils.js"></script>
+	<script type="text/javascript" src="./dependencies/webaudio-mod-player/player.js"></script>
+	<script type="text/javascript" src="./dependencies/webaudio-mod-player/st3.js"></script>
+	
+	<script type="text/javascript" src="./customised-webaudio-mod-player.js"></script>
+	
+	<script src="utils.js"></script> 
+	<script src="graphics.js"></script> 
+	<script src="MusicPlayer.js"></script> 
+	
+    <script src="u2_fillpoly.js"></script> 
+	<script src="u2_drawclip.js"></script> 
+	<script src="u2_calc.js"></script> 
+	<script src="u2_main.js"></script> 
+
+	<script src="part01_ALKU.js"></script>
+	<script src="part02_U2A.js"></script> 
+	<script src="part03_PAM.js"></script> 
+	<script src="part04_BEGLOGO.js"></script>
+	<script src="part05_GLENZ_TRANSITION.js"></script> 
+	<script src="part06_GLENZ_3D.js"></script>
+	<script src="part07_TUNNELI.js"></script> 
+	<script src="part08_TECHNO_CIRCLES.js"></script> 
+	<script src="part09_TECHNO_TRANSITION.js"></script> 
+    <script src="part10_TECHNO_BARS.js"></script> 	
+    <script src="part11_TECHNO_TROLL.js"></script> 	
+	<script src="part12_FOREST.js"></script> 
+	<script src="part13_LENS_TRANSITION.js"></script> 
+	<script src="part14_LENS_LENS.js"></script> 		
+	<script src="part15_LENS_ROTO.js"></script> 
+	<script src="part16_PLZ_PLASMA.js"></script> 
+	<script src="part17_PLZ_CUBE.js"></script>
+	<script src="part18_DOTS.js"></script>
+	<script src="part19_WATER.js"></script>
+	<script src="part20_COMAN.js"></script>
+	<script src="part21_JPLOGO.js"></script>
+	<script src="part22_U2E.js"></script>
+	<script src="part23_ENDLOGO.js"></script>
+	<script src="part24_CREDITS.js"></script>
+	<script src="part25_ENDSCRL.js"></script>
+
+
+	<script src="main.js"></script> 
+
+
+</head> 
+<body  onload="window.init();" bgcolor="#333">
+<style type="text/css"> 
+	#main:-moz-full-screen,
+	#main:-moz-full-screen canvas {
+		width: 100%;
+		height: 100%;
+	}
+	#main:-webkit-full-screen,
+	#main:-webkit-full-screen canvas {
+		width: 100%;
+		height: 100%;
+	}
+	#main:fullscreen,
+	#main:fullscreen canvas {
+		width: 100%;
+		height: 100%;
+	}
+</style> 
+
+<script>
+	function fullscr(elemId) {
+	var elem = document.getElementById(elemId);
+	if (elem.requestFullscreen) {
+		elem.requestFullscreen();
+	} else if (elem.mozRequestFullScreen) {
+			elem.mozRequestFullScreen();
+	} else if (elem.webkitRequestFullScreen) {
+			elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+	}
+}
+
+</script>
+
+
+<center>
+	<div id="main"></div>
+	<button onclick="fullscr('main');">FULLSCREEN</button>
+	<br><br>
+	<SPAN STYLE="color:#FFFFFF">
+	Note: Screen remains black for ~20 seconds at the beginning (only background sound plays)
+	</SPAN>
+</center>
+
+
+</body>
+</html>
