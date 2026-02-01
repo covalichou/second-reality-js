@@ -31,7 +31,7 @@ Each file corresponds to a specific scene from the original 1993 masterpiece.
 | 06 | `part06_GLENZ_3D.js` | Bouncing Glenz vectors |
 | 07 | `part07_TUNNELI.js` | Tunnel. |
 | 08 | `part08_TECHNO_CIRCLES.js` | Techno part  (Circles interference) |
-| 09 | `part09_TECHNO_BARS.js` | Techno part  transition (1,2,3,4 bars) |
+| 09 | `part09_TECHNO_TRANSITION.js` | Techno part  transition (1,2,3,4 bars) |
 | 10 | `part10_TECHNO_BARS` | Techno part (Bars interferences) |
 | 11 | `part11_TECHNO_TROLL.js` | "Troll" picture with CRT TV shutdown effect |
 | 12 | `part12_FOREST.js` | Forest scroller |
@@ -52,9 +52,9 @@ Each file corresponds to a specific scene from the original 1993 masterpiece.
 ---
 
 ## 📐 3D Engine (U2 System)
-The files prefixed with `u2_` represent the specific 3D engine used during part 02 and 22
+The files prefixed with `u2_` represent the specific 3D engine used during part 02 (spaceships in intro ) and 22 (3D city overfly)
 * `u2_main.js`, `u2_calc.js`, `u2_drawclip.js`, `u2_fillpoly.js`
-Additionnaly, U2 polygon filling functions have been completed and are re-used by part 06 (Glenz) 
+Additionnaly, U2 polygon filling functions have been completed and are re-used by part 06 (Glenz)  and 10 (Techno bars)
 ---
 
 ## 📦 Data & Dependencies
@@ -66,7 +66,7 @@ Additionnaly, U2 polygon filling functions have been completed and are re-used b
 ---
 
 ## 🛠️ Build System
-* `bundle_header.html` & `bundle_footer.html`: Are Used to wrap the source files into a single standalone HTML file during the "Release" process. (not included here, as it is as simple as a .bat file)
+* `bundle_header.html` & `bundle_footer.html`: Are Used to wrap the source files into a single standalone HTML file during the "Release" process (not included here).
 
 
   
