@@ -48,7 +48,7 @@ This project wouldn't exist without these incredible resources:
 ## 🛠️ Open Source Libraries & Tools
 This project uses two libraries:
 * **[CodeF](https://codef.santo.fr/)**: Not actively used in the final code, but it was my major source of inspiration for the graphic processing in javascript.
-* **[Webaudio Mod Playe](https://github.com/electronoora/webaudio-mod-player])**: Used to play the music, with slight modifications to support custom speed adjustments. 
+* **[Webaudio Mod Player](https://github.com/electronoora/webaudio-mod-player)**: Used to play the music, with slight modifications to support custom speed adjustments. 
 
 ## 📖 Educational Approach & Code Clarity
 One of my main goals was to **demystify** the effects implemented in Second Reality. Original demo coding often relied on cryptic Assembly and VGA hardware tricks. 
