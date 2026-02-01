@@ -1,0 +1,24 @@
+# Systel files
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.bak
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# Logs
+*.log
+devmode/
+Release/
+main_dev_new.html
+file_list.txt
+*.bat
+base64_encode.js
+CURRENT_NOTES.txt
+part_empty.js
+test_console.html
+
+
