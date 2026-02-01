@@ -117,8 +117,11 @@ let CurrentSyncPointFrame;  //Animation frame elapsed since last sync point chan
 let AnimationFramesToRender;  //number of animation frames to progress in this screen refresh
 let ActualRenderedAnimationFrame; //number of animation frames rendered in current part
 
+let WakeLock = null;
+
 
 let mainscreen = {};
+
 //*******************************************************************************
 // Main entry point of the demo.   init has to be called in the HTML file loading the script
 // (the function needs to be declared in "window" scope  in order to be called by the unpacker, when running the single packed HTML file release,)
@@ -134,6 +137,14 @@ window.init = function()
 
     //init music player
     InitMusicPlayer();
+
+    try {
+        WakeLock = navigator.wakeLock.request("screen");
+        console.info("Wake Lock is active!");
+    } catch (err) {
+        // The Wake Lock request has failed - usually system related, such as battery.
+        console.error(`${err.name}, ${err.message}`);
+    }
 
 	//go!
 	requestAnimFrame( FrameUpdateCallback ); //start main loop
