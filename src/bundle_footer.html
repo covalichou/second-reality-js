@@ -1,6 +1,5 @@
 </script>
-</head> 
-<body  onload="window.init();" bgcolor="#333">
+<body bgcolor="#333">
 <style type="text/css"> 
 	#main:-moz-full-screen,
 	#main:-moz-full-screen canvas {
@@ -19,6 +18,7 @@
 	}
 </style> 
 
+
 <script>
 	function fullscr(elemId) {
 	var elem = document.getElementById(elemId);
@@ -35,13 +35,40 @@
 
 
 <center>
-	<div id="main"></div>
-	<button onclick="fullscr('main');">FULLSCREEN</button>
+	
+	<div id="launcher"></div>
+	<button id="startBtn">START</button>
+ 	<div id="main"></div>
+	<button id="fullscr" onclick="fullscr('main');">FULLSCREEN</button>
 	<br><br>
 	<SPAN STYLE="color:#FFFFFF">
 	Note: Screen remains black for ~20 seconds at the beginning (only background sound plays)
 	</SPAN>
 </center>
 
+<script>
+	document.getElementById('fullscr').style.visibility = 'hidden';
+    var elem = document.getElementById('startBtn');
+	document.getElementById('startBtn').addEventListener('click', function() {
+        
+        document.getElementById('startBtn').style.visibility = 'hidden';
+        document.getElementById('fullscr').style.visibility = 'visible';
+        // Release audio
+        if (window.AudioContext || window.webkitAudioContext) {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            if (context.state === 'suspended') {
+                context.resume();
+            }
+        }
+
+        // Start the demo
+        if (typeof window.init === 'function') {
+            window.init();
+        } else {
+            console.error("La fonction window.init() n'est pas trouvée !");
+        }
+    });
+</script>
 
 </body>
+</html>
