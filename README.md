@@ -57,13 +57,14 @@ One of my main goals was to **demystify** the effects implemented in Second Real
 * **Documentation:** Every major effect includes headers and inline comments explaining the underlying concepts.
 
 ## 📝 Development Status
-* **Current Status:** * Stable release, tested with 60-70Hz refresh rates.
+* **Current Status:**
+  * Stable release, tested with 60-70Hz refresh rates.
   * Timing is aligned with a reference video.
 * **Known Issues:** * Room for performance improvements (though not the primary goal).
   * High refresh rate screens (>70Hz) may require further adjustments in certain parts.
   * Seeking "pixel perfect" accuracy on a few remaining effects.
   * The release file is currently unpacked/unminified, there is room to improve that!
-  * 
+   
 
 JS Source code is available in the src folder!
 
