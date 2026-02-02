@@ -19,7 +19,7 @@ These files handle the foundation of the demo: parts orchestration, graphics ren
 ---
 
 ## 🎬 The Demo Parts (Sequence)
-Each file corresponds to a specific scene from the original 1993 masterpiece.
+Each file corresponds to a specific part from the original 1993 masterpiece.
 
 | Part | File | Description |
 | :---: | :--- | :--- |
@@ -51,7 +51,7 @@ Each file corresponds to a specific scene from the original 1993 masterpiece.
 
 ---
 
-## 📐 3D Engine (U2 System)
+## 📐 3D Engine (called "U2")
 The files prefixed with `u2_` represent the specific 3D engine used during part 02 (spaceships in intro ) and 22 (3D city overfly)
 * `u2_main.js`, `u2_calc.js`, `u2_drawclip.js`, `u2_fillpoly.js`
 Additionnaly, U2 polygon filling functions have been completed and are re-used by part 06 (Glenz)  and 10 (Techno bars)
@@ -59,6 +59,8 @@ Additionnaly, U2 polygon filling functions have been completed and are re-used b
 
 ## 📦 Data & Dependencies
 * **`/data`**: Contains all static assets (converted graphics, palettes, and pre-calculated tables) stored as JavaScript objects for easy loading.
+Everything data asset comes from the original source code repository or from the original demo binaries (some data are missing or outdated in Future Crew repository).
+
 * **`/dependencies`**:
     * `codef`: Used for core canvas and stats management during development.
     * `webaudio-mod-player`: The S3M/MOD engine used to play the soundtrack.
