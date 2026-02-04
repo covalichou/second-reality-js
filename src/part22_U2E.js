@@ -66,6 +66,13 @@ function fadeset()
     let  x,y;
     const left=68;
     const right=256-3;
+    //when seeking from another part, force 4 corners black
+    for(y=0;y<25;y++)   //when seeking from another part, force top corners black
+    {
+	    for( x=0;x<left;x++) IndexedFrameBuffer[x+y*320]=0;
+        for( x=right;x<320;x++) IndexedFrameBuffer[x+y*320]=0;
+    }
+
     for(y=0;y<25;y++)   //top band of previous part picture is white but will become black
 	    for( x=left;x<right;x++) IndexedFrameBuffer[x+y*320]=252;
 
@@ -78,6 +85,13 @@ function fadeset()
 
     for(y=175;y<200;y++)  //bottom band of previous part picture will become black
 	    for( x=left;x<right;x++) IndexedFrameBuffer[x+y*320]=252;
+    
+    for(y=175;y<200;y++)   //when seeking from another part, force low corners black
+    {
+	    for( x=0;x<left;x++) IndexedFrameBuffer[x+y*320]=0;
+        for( x=right;x<320;x++) IndexedFrameBuffer[x+y*320]=0;
+    }
+
 
     prev_palette.fill(0); //all black palette except color 252,253 white
     prev_palette[252*3]=63; prev_palette[252*3+1]=63; prev_palette[252*3+2]=63; //color 252 white

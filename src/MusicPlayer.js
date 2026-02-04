@@ -139,7 +139,7 @@ function music_change(music, position,row)
 	for (let i=0; i<Musics.length; i++)  //pause all the music expect the requested one, seek to new position
 	{
 	
-		if (i!=music)  //i is not the expected song, paue it
+		if (i!=music)  //i is not the expected song, pause it
 		{
 			MusicPlayer[i].pause();
 			//console.log ("pause: "  + i);  //TODO REMOVE
@@ -183,7 +183,7 @@ function MusicResume()
 function STARTMUS() 
 {
 let MUSIC_SPEED_GAIN=[1.00370,1.00365]; // slight speed adjustment to match with reference video  
-	return { init: () => { PartName = "Music Starter";},   update: () => { music_change(0,0,0); HasPartEnded=true;},  end: () => { }};
+	return { init: () => { PartName = "Music Starter";},   update: () => { console.log("STARTMUS");music_change(0,0,0); HasPartEnded=true;},  end: () => { }};
 }
 
 function MusicChanger1() 
