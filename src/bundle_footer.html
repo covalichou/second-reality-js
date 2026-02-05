@@ -27,26 +27,30 @@
     }
 
     #main canvas {
-        height: 400px !important; 
         width: 640px !important;
+        height: 400px !important; /* Taille de base */
         background-color: #000;
-        image-rendering: pixelated;
-        display: block; 
+        display: block;
+        /* On ne met pas image-rendering: pixelated pour garder le smoothing par défaut */
     }
 
+    /* Force le 4:3 étiré verticalement */
     .forced43 #main canvas {
-        width: 640px !important;
         height: 480px !important; /* 640 / (4/3) = 480 */
-        aspect-ratio: 4 / 3 !important;
         object-fit: fill !important;
     }
 
+    /* Le lissage est géré naturellement par le navigateur si on ne précise rien, 
+       mais on peut le forcer si besoin */
+    .smoothing-on #main canvas {
+        image-rendering: auto; 
+    }
 
-    #fullscreen:fullscreen #main canvas,
-    #fullscreen:-webkit-full-screen #main canvas {
-        height: 100vh !important; 
+    /* Plein écran 4:3 */
+    #fullscreen:fullscreen #main canvas {
         width: auto !important;
-        aspect-ratio: 4 / 3; 
+        height: 100vh !important;
+        aspect-ratio: 4 / 3;
     }
 
     
@@ -149,6 +153,19 @@
     .source-link-bottom a:hover svg {
         opacity: 1;
     }
+
+    .key-cap {
+        display: inline-block;
+        padding: 1px 6px;
+        margin: 0 2px;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        background: #222;
+        color: #eee;
+        
+        vertical-align: middle;
+        font-weight: bold;
+    }
 </style>
 
 <script>
@@ -165,19 +182,14 @@
 </script>
 
 <center>
-    <div id="fullscreen" class="fullscreen">
-        <button id="startBtn">Press button to enter Second Reality</button>
+    <div id="fullscreen" class="fullscreen forced43 smoothing-on">
+        <button id="startBtn">Click here to enter Second Reality</button>
         <div id="main"></div>
     </div>
-
     <div class="controls-container">
         <button id="fullscr" onclick="fullscr('fullscreen');">View Fullscreen</button>
 
-        <div class="checkbox-group">
-            <label><input type="checkbox" id="aspectRatioToggle"> FORCE 4:3 ASPECT RATIO</label>
-            <label><input type="checkbox" id="smoothingToggle"> ENABLE SMOOTHING</label>
-        </div>
-        <br>
+        <br><br>
         <div class="navigation-menu">
             <select id="partSelector" disabled>
                 <option value="" disabled selected>Jump to part...</option>
@@ -195,6 +207,11 @@
             </select>
          </div>
         <div class="note-container">
+            <p class="warning-note">
+                - Use the keyboard 
+                <span class="key-cap">←</span> <span class="key-cap">→</span> 
+                arrows to quickly switch between demo parts -
+            </p>
             <p class="warning-note">
                 - 20 first seconds of the demo is just ambient sound over black background - 
             </p>
@@ -239,17 +256,9 @@
         document.getElementById('partSelector').disabled = false;
     });
 
-    const ratioToggle = document.getElementById('aspectRatioToggle');
-    const smoothingToggle = document.getElementById('smoothingToggle');
     const container = document.getElementById('fullscreen');
 
-    ratioToggle.addEventListener('change', function() {
-        container.classList.toggle('forced43', this.checked);
-    });
-
-    smoothingToggle.addEventListener('change', function() {
-        container.classList.toggle('smoothing-on', this.checked);
-    });
+    
     // Part selector logic
     document.getElementById('partSelector').addEventListener('change', function() {
     const partName = this.value;
@@ -260,6 +269,33 @@
     }
     setTimeout(() => {  this.selectedIndex = 0;  }, 100);  //enable to reselect same part
 });
+
+// Keyboard navigation (with lock to prevent multiple rapid triggers)
+let isKeyLocked = false; 
+
+document.addEventListener('keydown', function(event) 
+{
+    if (document.getElementById('partSelector').disabled) return;
+    
+
+    if (isKeyLocked) return;
+
+    const partNames = SeekPoints.map(p => p.name);
+    let currentIndex = partNames.indexOf(PartName);
+    if (currentIndex === -1) currentIndex = 0;
+
+    let targetPart = null;
+
+    if (event.key === "ArrowRight") 
+        if (window.Rightkey()) isKeyLocked = true;
+    if (event.key === "ArrowLeft") 
+        if (window.Leftkey()) isKeyLocked = true;
+    
+
+    setTimeout(() => { isKeyLocked = false; }, 100); 
+    
+});
+
 </script>
 </body>
 </html>

@@ -299,24 +299,13 @@ const SeekPoints=
      { music: 1 , position :  13, row:  0	, name:"TUNNELI", part_number:   8            },	// 	    
      { music: 1 , position :  16, row: 60	, name:"TECHNO" , part_number:   9            },	// 	 
      { music: 1 , position :  34, row: 60	, name:"FOREST" , part_number:  13            },	// 	 
-     { music: 1 , position :  38, row: 60	, name:"LENS" , part_number:  14            },	// 	 
+     { music: 1 , position :  38, row: 60	, name:"LENS"   , part_number:  14            },	// 	 
      { music: 1 , position :  51, row: 60	, name:"PLASMA" , part_number:  17            },	// 	 
-     { music: 1 , position :  65, row:  0	, name:"DOTS" , part_number:  19            },	// 	 doesn"t work correctly (music issue when coming from some parts)
-     { music: 1 , position :  75, row:  0	, name:"WATER" , part_number:  20            },	// 	 
-     { music: 1 , position :  79, row:  0	, name:"COMAN" , part_number:  21            },	// 	 
+     { music: 1 , position :  75, row:  0	, name:"WATER"  , part_number:  20            },	// 	 
+     { music: 1 , position :  79, row:  0	, name:"COMAN"  , part_number:  21            },	// 	 
      { music: 1 , position :  83, row:  0	, name:"JPLOGO" , part_number:  22            },	// 	 
-     { music: 0 , position :  14, row:  0	, name:"U2E" , part_number:  25            },	// 	 
-     { music: 0 , position :  21, row: 32	, name:"CREDITS" , part_number:  26            },	// 	 
-
-     /*WATER(),                  // "raytraced" scrolling sword   //  20 
-    COMAN(),                  // 3D sinusfield                 //  21   
-    JPLOGO(),                 // Jellypic                      //  22  
-    PartDelay(),              // wait before changing music    //  23
-    MusicChanger2(),          // change song                   //  24                        
-    U2E(),                    // Vector part II                //  25
-    ENDLOGO(),                // End picture                   //  26
-    CREDITS(),                // Credits                       //  27
-    ENDSCRL(),                // Greetings scroll              //  28*/
+     { music: 0 , position :  14, row:  0	, name:"U2E"    , part_number:  25            },	// 	 
+     { music: 0 , position :  21, row: 32	, name:"CREDITS", part_number:  26            },	// 	 
 ];
 let SeekPointMap= new Map();
 	for (let i=0; i<SeekPoints.length; i++)
@@ -343,3 +332,26 @@ function GoToPart(partName)
         console.log("Part not found: " + partName);
     }
 }
+function FindCurrentSeekPoint()  //find the latest crossed seek point according to CurrentPartIndex, 
+{
+    let current;
+    for (let i=0; i<SeekPoints.length; i++) if (CurrentPartIndex>=SeekPoints[i].part_number) current=i;
+    return current;
+}
+
+function Rightkey()
+{
+    let current=FindCurrentSeekPoint();
+    if (current>=SeekPoints.length-1) return false;  //last part reached
+    GoToPart(SeekPoints[current+1].name);
+    return true;
+}
+
+function Leftkey()
+{
+     let current=FindCurrentSeekPoint();
+    if (current<=0)  return false;
+     GoToPart(SeekPoints[current-1].name);
+     return true;
+}
+
