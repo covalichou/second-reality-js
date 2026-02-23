@@ -28,10 +28,10 @@
 
     #main canvas {
         width: 640px !important;
-        height: 400px !important; /* Taille de base */
+        height: 400px !important;
         background-color: #000;
         display: block;
-        /* On ne met pas image-rendering: pixelated pour garder le smoothing par défaut */
+       
     }
 
     /* Force le 4:3 étiré verticalement */
@@ -40,11 +40,16 @@
         object-fit: fill !important;
     }
 
-    /* Le lissage est géré naturellement par le navigateur si on ne précise rien, 
-       mais on peut le forcer si besoin */
+    /* froce smoothing of */
     .smoothing-on #main canvas {
-        image-rendering: auto; 
+    image-rendering: optimizeSpeed;             /* Vieux navigateurs */
+    image-rendering: -moz-crisp-edges;          /* Firefox */
+    image-rendering: -webkit-optimize-contrast; /* Safari */
+    image-rendering: -o-crisp-edges;            /* Opera */
+    image-rendering: pixelated;                 /* Chrome / Standard */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE */
     }
+
 
     /* Plein écran 4:3 */
     #fullscreen:fullscreen #main canvas {

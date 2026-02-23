@@ -120,7 +120,12 @@
     /* Le lissage est géré naturellement par le navigateur si on ne précise rien, 
        mais on peut le forcer si besoin */
     .smoothing-on #main canvas {
-        image-rendering: auto; 
+    image-rendering: optimizeSpeed;             /* Vieux navigateurs */
+    image-rendering: -moz-crisp-edges;          /* Firefox */
+    image-rendering: -webkit-optimize-contrast; /* Safari */
+    image-rendering: -o-crisp-edges;            /* Opera */
+    image-rendering: pixelated;                 /* Chrome / Standard */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE */
     }
 
     /* Plein écran 4:3 */
