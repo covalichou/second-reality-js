@@ -28526,6 +28526,8 @@ return { init: () => { PartInit(); },   update: () => { PartRenderFrame();},  en
 
 // Resolution of this part is 320x400 
 
+// Release 1.05 update palette management and fade-in/out to solve https://github.com/covalichou/second-reality-js/issues/4 and reproduce slight palette management bug in original code
+// In v1.05 palette are exactly as original
 
 function PLZ_PLASMA() 
 {
@@ -28538,15 +28540,13 @@ function PLZ_PLASMA()
     const DPII = 2* Math.PI;
     let l1,l2,l3,l4;
     let k1,k2,k3,k4;
-    let whitefadelevel, blackfadelevel,fadestartframe; 
-    let curpal,pals;
+    let curpal,pals,fadepal;
+    let do_pal;
     let sequence,cop_drop,lc;  //lc = current plasma Y position (60 for centered position) ,, sequence: "ttptr" in orginal code
     let lsini4, lsini16,psini,ptau;
     let prev_lc;
     
-    const FadeWhiteDuration = 512;  //duration in 70Hz frames
-    const FadeBlackDuration =  64;  //duration in 70Hz frames
-
+    
 
     const	inittable= /*[6][8]*/     // 8 values for each 6 sequence 
              [[1000,2000,3000,4000,3500,2300,3900,3670],
@@ -28569,15 +28569,18 @@ function PartInit()
 
     init_plz();
     cop_drop=0;
+    
     lc=60;
     sequence=0; 
+    fadepal=new Array(768);
+    fadepal.fill(0);
     initpparas(0);
-    fadestartframe=0;
-    whitefadelevel=1;  //will start fully faded white
-    blackfadelevel=0;  
+    do_pal=126;  //first fade duration is different (from white to normal palette), exact duration to get original palette
+    
     prev_lc=0;
     prev_mframe=0;
-
+  
+    
     IndexedFrameBuffer.fill(0);  // initial frame buffer color 0  (set to white to continue previous part)
     SetVGAPaletteColor(0, 63, 63, 63);  // color index 0  is white
     RenderIndexedModeFrame320x400(); //render all buffer at start, then we'll render only useful area
@@ -28622,15 +28625,9 @@ function PLZ(CurrentFrame)
     plzmove();  //update animation
 
     if (cop_drop!=0) do_drop(CurrentFrame);  //if drop requested, do it
+    else if (do_pal>=0) {increase_apply_palette(); do_pal--;}  //else increment palette until fade in is finished
 
-    // Fade palette if needed:
-    whitefadelevel=clip (whitefadelevel-(CurrentFrame-fadestartframe)/FadeWhiteDuration,0,1);
-    blackfadelevel=clip (blackfadelevel-(CurrentFrame-fadestartframe)/FadeBlackDuration,0,1);
-    
-    if (whitefadelevel!=0) 
-        SetVGAPaletteFadeToWhite(pals[curpal],whitefadelevel);
-    else if (blackfadelevel!=0)   SetVGAPaletteFadeToBlack(pals[curpal],blackfadelevel);
-    else  SetVGAPalette(pals[curpal]);
+
 
     // when dropping down, some plasma lines are remaining on top, we need to clear them
     if (lc>prev_lc) //plasma has been dropped down: clear lines between the previous and the new position
@@ -28659,8 +28656,7 @@ function do_drop(CurrentFrame)  //manage transition with falling / fading
         sequence= GetCurrentSyncPoint();  
         if (curpal!=sequence) initpparas(sequence);
 
-        blackfadelevel=1;
-        fadestartframe=CurrentFrame
+
         cop_drop=0;  //drop finished
         if (sequence==3) HasPartEnded=true; //end of part when sequence 3 is over (this means sequence 0,1,2 are done)   
     }
@@ -28718,6 +28714,24 @@ function initpparas(sequence)  //init plasma parameters for a given sequence
         k3=inittable[sequence][6];
         k4=inittable[sequence][7];
         curpal=sequence;
+        do_pal= 30;  //start palette fade(exact duration to get original palette)
+        for (let i=0;i<768;i++)
+           fadepal[i]= fadepal[i] & 0xFF;  // implement "the bug" in which fractional part is not cleared between 2 palette changes (clear only high 8 bits)
+        for (let a=0;a<256;a++)    console.log ("clear ",fadepal[a*3],fadepal[a*3+1],fadepal[a*3+2]);
+}
+//************************************************************************************************************************************************************************************************************
+function increase_apply_palette()  //manage palette in same way as original code
+{
+    let r,g,b;
+    for (let a=0;a<768;a++) { fadepal[a]+=pals[curpal][a] }  //increment to fade in or out (8.8 fixed point)
+    for (let a=0;a<256;a++)  
+    {
+        r= (fadepal[a*3  ]>>>8) & 0x3F;  // from 8.8 fixed point to 0..63 Vga level
+        g= (fadepal[a*3+1]>>>8) & 0x3F;
+        b= (fadepal[a*3+2]>>>8) & 0x3F;
+        SetVGAPaletteColor(a,r,g,b);
+        
+    }
 }
 //************************************************************************************************************************************************************************************************************
 //table generation
@@ -28753,7 +28767,7 @@ function init_plz()
 	for(a=0;a<64;a++) { pal[pptr++]=iptau(0   );pal[pptr++]=iptau(a   );pal[pptr++]=iptau(63-a); }
 	for(a=0;a<64;a++) { pal[pptr++]=iptau(a   );pal[pptr++]=iptau(63  );pal[pptr++]=iptau(a   ); }
     
-//	RB-white Palette 3
+//	RB-white Palette 3 (not used in final demo release version but present in original source code)
 	pptr=3; pal=pals[3];
 	for(a=1;a<64;a++) { pal[pptr++]=iptau(a  ) ;pal[pptr++]=iptau(0   );pal[pptr++]=iptau(0   ); }
 	for(a=0;a<64;a++) { pal[pptr++]=iptau(63 ) ;pal[pptr++]=iptau(a   );pal[pptr++]=iptau(a   ); }
@@ -28762,20 +28776,24 @@ function init_plz()
 
 //	white Palette 2
 	pptr=3; pal=pals[2];
-	for(a=1;a<64;a++) { pal[pptr++]=iptau(0   )/2;pal[pptr++]=iptau(0   )/2;pal[pptr++]=iptau(0   )/2; }
-	for(a=0;a<64;a++) { pal[pptr++]=iptau(a   )/2;pal[pptr++]=iptau(a   )/2;pal[pptr++]=iptau(a   )/2; }
-	for(a=0;a<64;a++) { pal[pptr++]=iptau(63-a)/2;pal[pptr++]=iptau(63-a)/2;pal[pptr++]=iptau(63-a)/2; }
-	for(a=0;a<64;a++) { pal[pptr++]=iptau(0   )/2;pal[pptr++]=iptau(0   )/2;pal[pptr++]=iptau(0   )/2; }
+	for(a=1;a<64;a++) { pal[pptr++]=Math.floor(iptau(0   )/2);pal[pptr++]=Math.floor(iptau(0   )/2);pal[pptr++]=Math.floor(iptau(0   )/2); }
+	for(a=0;a<64;a++) { pal[pptr++]=Math.floor(iptau(a   )/2);pal[pptr++]=Math.floor(iptau(a   )/2);pal[pptr++]=Math.floor(iptau(a   )/2); }
+	for(a=0;a<64;a++) { pal[pptr++]=Math.floor(iptau(63-a)/2);pal[pptr++]=Math.floor(iptau(63-a)/2);pal[pptr++]=Math.floor(iptau(63-a)/2); }
+	for(a=0;a<64;a++) { pal[pptr++]=Math.floor(iptau(0   )/2);pal[pptr++]=Math.floor(iptau(0   )/2);pal[pptr++]=Math.floor(iptau(0   )/2); }
 
-//	white II Palette 4
+//	white II Palette 4 (not used in final demo release version but present in original source code)
 	pptr=3; pal=pals[4];
 	for(a=1;a<75;a++) { pal[pptr++]=iptau(63-a*64/75); pal[pptr++]=iptau(63-a*64/75);pal[pptr++]=iptau(63-a*64/75); }
 	for(a=0;a<106;a++){ pal[pptr++]=0; pal[pptr++]=0; pal[pptr++]=0; }
-	for(a=0;a<75;a++) { pal[pptr++]=iptau(a*64/75)*8/10; pal[pptr++]=iptau(a*64/75)*9/10; pal[pptr++]=iptau(a*64/75); }
+	for(a=0;a<75;a++) { pal[pptr++]=Math.floor(iptau(a*64/75)*8/10); pal[pptr++]=Math.floor(iptau(a*64/75)*9/10); pal[pptr++]=iptau(a*64/75); }
     
-	pptr=0; pal=pals[0];
+	//convert for fade in/out
+    for(a=0;a<768;a++) pals[0][a]=(pals[0][a]-63)*2;  //negative increment for first fade in (will fade-in from white in 127 frames)
+	for (p=1;p<5;p++)
+        for(a=0;a<768;a++) pals[p][a]=pals[p][a]*8;  //compute increment to apply to each frame (to be interpreted as 8.8 fixed point)!  multiply by 8 and divide later by 256, (=divide by 32 and get 8 bit fractional part) (will fade in from black in ~32 frames)
 
-
+    
+    
 
 }
 
@@ -31695,10 +31713,10 @@ function Leftkey()
 
     #main canvas {
         width: 640px !important;
-        height: 400px !important; /* Taille de base */
+        height: 400px !important;
         background-color: #000;
         display: block;
-        /* On ne met pas image-rendering: pixelated pour garder le smoothing par défaut */
+       
     }
 
     /* Force le 4:3 étiré verticalement */
@@ -31707,11 +31725,16 @@ function Leftkey()
         object-fit: fill !important;
     }
 
-    /* Le lissage est géré naturellement par le navigateur si on ne précise rien, 
-       mais on peut le forcer si besoin */
+    /* froce smoothing of */
     .smoothing-on #main canvas {
-        image-rendering: auto; 
+    image-rendering: optimizeSpeed;             /* Vieux navigateurs */
+    image-rendering: -moz-crisp-edges;          /* Firefox */
+    image-rendering: -webkit-optimize-contrast; /* Safari */
+    image-rendering: -o-crisp-edges;            /* Opera */
+    image-rendering: pixelated;                 /* Chrome / Standard */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE */
     }
+
 
     /* Plein écran 4:3 */
     #fullscreen:fullscreen #main canvas {
